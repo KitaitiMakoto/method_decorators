@@ -2,8 +2,10 @@ require 'spec_helper'
 require 'method_decorators/decorators/dryrun'
 
 describe Dryrun do
+  let(:output) { StringIO.new }
   before :each do
-    $stderr = StringIO.new
+    $stderr = output
+    Dryrun::DEFAULT_OPTIONS[:output] = output
   end
 
   describe "#call" do
@@ -28,7 +30,7 @@ describe Dryrun do
       end
 
       it "outputs to $stderr the message that executing dryrun" do
-        $stderr.should_receive(:puts).with("DRYRUN: method")
+        output.should_receive(:puts).with("DRYRUN: method")
         subject.call(method, this)
       end
     end
@@ -71,10 +73,9 @@ describe Dryrun do
 
       it "output dry run message to $stderr" do
         subject.stub(:dryrun?).and_return(true)
-        $stderr = StringIO.new
         subject.destructive_procedure
-        $stderr.rewind
-        expect($stderr.read).to eq("DRYRUN: destructive_procedure\n")
+        output.rewind
+        expect(output.read).to eq("DRYRUN: destructive_procedure\n")
       end
     end
 
