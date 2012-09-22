@@ -7,12 +7,8 @@ describe Dryrun do
   end
 
   describe "#call" do
-    let!(:method_name) { :method }
-    let(:method) { double(method_name, :call => true) }
+    let(:method) { double(:method, :call => true, :name => :method) }
     subject { Dryrun.new }
-    before :each do
-      subject.method_name = method_name
-    end
 
     context "when this.dryrun? is false" do
       let(:this) { double(:this, :dryrun? => false) }
