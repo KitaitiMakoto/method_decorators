@@ -1,16 +1,16 @@
 require 'spec_helper'
-require 'method_decorators/decorators/dryrun'
+require 'method_decorators/dryrun'
 
-describe Dryrun do
+describe MethodDecorators::Dryrun do
   let(:output) { StringIO.new }
   before :each do
     $stderr = output
-    Dryrun::DEFAULT_OPTIONS[:output] = output
+    MethodDecorators::Dryrun::DEFAULT_OPTIONS[:output] = output
   end
 
   describe "#call" do
     let(:method) { double(:method, :call => true, :name => :method) }
-    subject { Dryrun.new }
+    subject { MethodDecorators::Dryrun.new }
 
     context "when this.dryrun? is false" do
       let(:this) { double(:this, :dryrun? => false) }
@@ -50,7 +50,7 @@ describe Dryrun do
     let(:return_value) { "This procedure destructs something!" }
     let(:klass) do
       Class.new Base do
-        +Dryrun
+        +MethodDecorators::Dryrun
         def destructive_procedure
           "This procedure destructs something!"
         end
