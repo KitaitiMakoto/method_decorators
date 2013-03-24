@@ -15,7 +15,16 @@ module MethodDecorators
 
     def call(orig, this, *args, &blk)
       if this.respond_to? @when and this.__send__(@when)
-        @output.puts "DRYRUN: #{orig.name}"
+        message = "DRYRUN: #{orig.name}"
+        if @output.kind_of? IO or
+            Object.const_defined? :StringIO and @output.kind_of? StringIO
+          @output.puts message
+        elsif Object.const_defined? :Logger and @output.kind_of? Logger
+          @output.info message
+        else
+          warn "Unsupported type of output: #{@output.class}"
+          $stderr.puts message
+        end
         return
       end
       orig.call(*args, &blk)
