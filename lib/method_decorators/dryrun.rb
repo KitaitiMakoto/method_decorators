@@ -3,18 +3,18 @@ require 'method_decorators'
 module MethodDecorators
   class Dryrun < Decorator
     DEFAULT_OPTIONS = {
-      :predicate => :dryrun?,
-      :output    => $stderr
+      :when   => :dryrun?,
+      :output => $stderr
     }
 
     def initialize(options={})
       options = DEFAULT_OPTIONS.merge(options)
-      @predicate = options[:predicate]
-      @output =    options[:output]
+      @when   = options[:when]
+      @output = options[:output]
     end
 
     def call(orig, this, *args, &blk)
-      if this.respond_to? @predicate and this.__send__(@predicate)
+      if this.respond_to? @when and this.__send__(@when)
         @output.puts "DRYRUN: #{orig.name}"
         return
       end
