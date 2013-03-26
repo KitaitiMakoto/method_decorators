@@ -16,10 +16,9 @@ module MethodDecorators
     def call(orig, this, *args, &blk)
       if this.respond_to? @when and this.__send__(@when)
         message = "DRYRUN: #{orig.name}"
-        if @output.kind_of? IO or
-            Object.const_defined? :StringIO and @output.kind_of? StringIO
+        if @output.respond_to? :puts
           @output.puts message
-        elsif Object.const_defined? :Logger and @output.kind_of? Logger
+        elsif @output.respond_to? :info
           @output.info message
         else
           warn "Unsupported type of output: #{@output.class}"
