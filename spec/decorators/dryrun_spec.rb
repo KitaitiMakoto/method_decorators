@@ -44,6 +44,16 @@ describe MethodDecorators::Dryrun do
       end
     end
 
+    context "when a Logger passed as output" do
+      let!(:logger) { double(:logger, :info => true) }
+      subject { MethodDecorators::Dryrun.new(:output => logger) }
+
+      it "call #info of it" do
+        logger.should_receive(:info).once
+        subject.call(method, nil)
+      end
+    end
+
   end
 
   describe "acceptance" do
